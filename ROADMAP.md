@@ -218,6 +218,7 @@ Imported Word 97–2003 `.doc`/`.dot` files now ask for a supported DOCX target 
 - 2026-10-15: Find opens Navigation on Results; editing the query restores Results after manual Headings/Pages navigation. Typed and selected-text searches retain document contents (#2096).
 
 | Date | What landed |
+| 2026-10-30 | Equations: a `\name` such as `\sqrt` or `\alpha` becomes its symbol as soon as any non-letter follows it, so `16\sqrt(13)/13` builds up to a fraction with a radical; before, it stayed `\sqrt` unless a space followed, and the backslash then stopped build-up. A space that finishes a name only replaces it, so `\sqrt x` gives √x instead of an empty radical (#4255) |
 | 2026-10-28 | **Arabic diacritic editing (#4757):** Backspace removes the last stored Arabic combining mark, so its base letter can stay while the mark is replaced. Caret movement and forward Delete keep their cluster rules. Synthetic command, history, protection and native/DOCX fresh-reopen checks; no native Word comparison or readiness change. |
 | 2026-10-29 | Insert › Shapes shows the basic shapes as a grid of code-drawn icon tiles, each with an accessible name and tooltip, instead of a text list (#4349) |
 | 2026-10-29 | Window sizing falls back to the screen rectangle when the reported inner size is invalid, and an Equation symbol tooltip no longer repeats a missing glyph's name or code point |
@@ -675,6 +676,7 @@ Footer page-table height and body wrapping are corrected. Other pagination gaps 
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-10-30 | trivial | Progress log: equation names finish on any non-letter; a name's space doesn't build an empty radical (#4255) |
 | 2026-10-28 | trivial | Aligned copies retain their locked document coordinate during middle-button scrolling and can start on secondary selected objects; existing Ctrl and Shift selection behavior stays (#4764) |
 | 2026-10-28 | trivial | Ctrl/Command+Shift drags a selected floating object into an axis-aligned copy (#4764); synthetic Linux interaction and persistence controls, native desktop and Word untested; gap/readiness estimates unchanged |
 | 2026-10-28 | trivial | Connector object lookups retain the typed column-selection inputs on current main (#3631); readiness estimates unchanged |
