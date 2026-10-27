@@ -341,10 +341,11 @@ fn type_text(s: &mut Session, v: &Value) -> CmdResult {
                 if c == ' ' && changed {
                     continue;
                 }
-            } else if !style.nor && !latex && !c.is_alphanumeric() && c != '\\' {
-                // Any other character that can't be part of a name ends it too (`\sqrt(` gives
-                // `√(`). Left as `\sqrt`, the backslash also stopped build-up (#4255). LaTeX
-                // input keeps its control words for its own parser (`\sqrt{2}`).
+            } else if !style.nor && !latex && !c.is_alphanumeric() {
+                // Any other character that can't be part of a name ends it too: `\sqrt(` gives
+                // `√(`, and the `\` of a next name finishes the one before (`\alpha\beta`). Left
+                // as `\sqrt`, the backslash also stopped build-up (#4255). LaTeX input keeps its
+                // control words for its own parser (`\sqrt{2}`).
                 if let Some(p) = me::autocorrect(&mut math.nodes, &pos) {
                     pos = p;
                     transformed = true;

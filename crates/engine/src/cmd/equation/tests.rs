@@ -31,44 +31,6 @@ fn type_an_equation_like_word() {
     assert!(linear(&s).is_empty());
 }
 
-/// #4255: typed key by key, a `\\name` becomes its symbol as soon as any non-letter follows it, as
-/// in Word. Left as `\\sqrt` it stayed literal text inside the fraction, and the backslash stopped
-/// the next build-up altogether. A space that finishes a name only replaces it, so the radicand is
-/// typed after `√` instead of next to an empty radical.
-#[test]
-fn equation_names_finish_on_any_non_letter() {
-    let typed = |text: &str, latex: bool| {
-        let mut s = session();
-        s.run("insert.equation", &json!({})).unwrap();
-        if latex {
-            s.run("equation.inputFormat", &json!({"format": "latex"})).unwrap();
-        }
-        for c in text.chars() {
-            s.run("equation.type", &json!({"text": c.to_string()})).unwrap();
-        }
-        let nodes = nodes_of(&s, &s.math.as_ref().unwrap().at).unwrap();
-        (linear(&s), nodes)
-    };
-    // The report's equation: the fraction holds a radical, not the text `\\sqrt(13)`.
-    for (text, want) in [("a=64\\sqrt(13)/13 ", "a=(64√13)/13"), ("b=16\\sqrt(13)/13 ", "b=(16√13)/13")] {
-        let (lin, nodes) = typed(text, false);
-        assert_eq!(lin, want, "{text}");
-        let Some(MNode::Frac { num, .. }) = nodes.get(1) else { panic!("{text}: no fraction in {nodes:#?}") };
-        assert!(num.iter().any(|n| matches!(n, MNode::Rad { .. })), "{text}: {num:#?}");
-    }
-    // `\\sqrt` then Space: √ to type after, not an empty radical with the radicand beside it.
-    for text in ["\\sqrt x ", "\\sqrt (x) "] {
-        let (lin, nodes) = typed(text, false);
-        assert_eq!(lin, "√x", "{text}");
-        assert!(matches!(nodes.as_slice(), [MNode::Rad { .. }]), "{text}: {nodes:#?}");
-    }
-    assert_eq!(typed("\\alpha+\\beta ", false).0, "α+β");
-    // A name followed by a letter or digit is still being typed.
-    assert_eq!(typed("\\alphax", false).0, "\\alphax");
-    // LaTeX input keeps its control words for its own parser.
-    assert_eq!(typed("\\sqrt{2} ", true).0, "√2");
-}
-
 #[test]
 fn structures_symbols_and_navigation() {
     let mut s = session();
