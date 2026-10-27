@@ -3553,12 +3553,12 @@ fn typed_equation(keys: &str, latex_input: bool) -> (String, String) {
     (got["linear"].as_str().unwrap_or_default().to_string(), got["latex"].as_str().unwrap_or_default().to_string())
 }
 
-/// #4255: a `\name` becomes its symbol as soon as any non-letter follows it, as in Word. Left as
-/// `\sqrt` it stayed literal text inside the fraction, and the backslash stopped the next build-up
-/// altogether. A space that finishes a name only replaces it, so the radicand is typed after `√`
-/// instead of next to an empty radical.
+/// #4255: a `\name` becomes its symbol as soon as a character that can't continue it follows, as
+/// in Word; a letter or digit keeps it open. Left as `\sqrt` it stayed literal text inside the
+/// fraction, and the backslash stopped the next build-up altogether. A space that finishes a name
+/// only replaces it, so the radicand is typed after `√` instead of next to an empty radical.
 #[test]
-fn equation_names_finish_on_any_non_letter() {
+fn equation_names_finish_where_a_name_cannot_continue() {
     // The report's equations: the fraction holds a radical, not the text `\sqrt(13)`.
     for (keys, linear, latex) in
         [("a=64\\sqrt(13)/13 ", "a=(64√13)/13", "a=\\frac{64\\sqrt{13}}{13}"), ("b=16\\sqrt(13)/13 ", "b=(16√13)/13", "b=\\frac{16\\sqrt{13}}{13}")]
