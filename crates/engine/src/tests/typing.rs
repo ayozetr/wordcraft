@@ -3574,6 +3574,7 @@ fn equation_names_finish_where_a_name_cannot_continue() {
     assert_eq!(typed_equation("\\alpha\\beta ", false).0, "αβ");
     // A name followed by a letter or digit is still being typed.
     assert_eq!(typed_equation("\\alphax", false).0, "\\alphax");
+    assert_eq!(typed_equation("\\alpha1", false).0, "\\alpha1");
     // LaTeX input keeps its control words for its own parser.
     assert_eq!(typed_equation("\\sqrt{2} ", true).0, "√2");
 }
